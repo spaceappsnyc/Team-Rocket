@@ -8,19 +8,24 @@
 
         const lightHemi = new BABYLON.HemisphericLight('HemisphericLight', new BABYLON.Vector3(0, 1, 0), scene);
         const lightOmni = new BABYLON.PointLight('OmniLight', new BABYLON.Vector3(10, 50, 50), scene);
-        lightHemi.diffuse = new BABYLON.Color3(0, 0.25, 1);
-        lightHemi.specular = new BABYLON.Color3(0, 0.25, 1);
-        lightHemi.groundColor = new BABYLON.Color3(0, 0.25, 1);
+        lightHemi.diffuse = new BABYLON.Color3(0.1, 0.25, 0.75);
+        lightHemi.specular = new BABYLON.Color3(0.1, 0.25, 0.75);
+        lightHemi.groundColor = new BABYLON.Color3(0.95, 0.95, 1);
         lightOmni.diffuse = new BABYLON.Color3(1, 1, 0);
-        lightOmni.specular = new BABYLON.Color3(1, 1, 0);
-        lightOmni.groundColor = new BABYLON.Color3(1, 1, 0);
+        lightOmni.specular = new BABYLON.Color3(0.25, 0.25, 0);
+        // lightOmni.groundColor = new BABYLON.Color3(1, 1, 0);
 
         const camera = new BABYLON.ArcRotateCamera('Camera', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene);
         camera.setPosition(new BABYLON.Vector3(0, 0, 20));
         camera.attachControl(canvas, true);
 
-
         const earth = BABYLON.MeshBuilder.CreateSphere('earth', { segments: 16, diameter: 10 }, scene);
+        const earthMaterial = new BABYLON.StandardMaterial('earthMaterial', scene);
+
+        earthMaterial.diffuseTexture = new BABYLON.Texture('/scripts/rendering/textures/earth/earth_texture.jpg', scene);
+        earthMaterial.diffuseTexture.uScale = -1;
+        earthMaterial.diffuseTexture.vScale = -1;
+        earth.material = earthMaterial;
 
         earth.position.y = 1;
         earth.position.x = 0;
@@ -37,9 +42,6 @@
         skyboxMaterial.infiniteDistance = true;
         // skyboxMaterial.turbidity = 100;
         skybox.material = skyboxMaterial;
-
-        const earthMaterial = new BABYLON.StandardMaterial('earthMaterial', scene);
-        earth.material = earthMaterial;
 
         return scene;
     };
