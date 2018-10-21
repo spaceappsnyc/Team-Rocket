@@ -43,6 +43,14 @@
         // skyboxMaterial.turbidity = 100;
         skybox.material = skyboxMaterial;
 
+        // TEST: SPHERE SHOULD APPEAR IN MADAGASCAR
+        const temp = BABYLON.Mesh.CreateSphere('temp', 30, 0.1, scene);
+        temp.parent = earth;
+        const matrix = new BABYLON.Matrix();
+        earth.getWorldMatrix().invertToRef(matrix);
+        temp.position = cartesianToSphere(-18.76, 46.86, 5);
+        // END TEST
+
         return scene;
     };
 
@@ -57,3 +65,13 @@
         engine.resize();
     });
 })();
+
+function cartesianToSphere(latitude, longitude, radius) {
+    longitude = -longitude + 180; // INTENTIONAL: Offset texture to match real coordinates
+    const phi = (90 - latitude) * (Math.PI / 180);
+    const theta = (longitude + 180) * (Math.PI / 180);
+    const x = -((radius) * Math.sin(phi) * Math.cos(theta));
+    const z = ((radius) * Math.sin(phi) * Math.sin(theta));
+    const y = ((radius) * Math.cos(phi));
+    return new BABYLON.Vector3(x, y, z);
+}
