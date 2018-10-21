@@ -20,7 +20,16 @@ app.engine('hbs', hbs({
     extname: 'hbs',
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, '/views/layouts/'),
-    partialsDir: path.join(__dirname, '/views/partials/')
+    partialsDir: path.join(__dirname, '/views/partials/'),
+    helpers: {
+        section: (name, options) => {
+            if (!this._sections) {
+                this._sections = {};
+            }
+            this._sections[name] = options.fn(this);
+            return null;
+        }
+    }
 }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
