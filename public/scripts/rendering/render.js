@@ -30,11 +30,12 @@
         const skybox = BABYLON.Mesh.CreateBox('skyBox', 100.0, scene);
         const skyboxMaterial = new BABYLON.StandardMaterial('skyBox', scene);
         skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('/scripts/rendering/textures/space_texture', scene);
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('/scripts/rendering/textures/space/space_texture', scene);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         skyboxMaterial.disableLighting = true;
+        // skyboxMaterial.infiniteDistance = true;
         skybox.material = skyboxMaterial;
 
         // const skyMaterial = new BABYLON.SkyMaterial('skyMaterial', scene);
