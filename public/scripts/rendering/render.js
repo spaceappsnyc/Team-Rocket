@@ -49,6 +49,14 @@
             newMeshes.map(item => item.position.y = 5);
         });
 
+        // TEST: SPHERE SHOULD APPEAR IN MADAGASCAR
+        const coords = [
+            { latitude: -18.76, longitude: 46.86 }
+        ];
+
+        placeMarker(coords, earth, scene);
+        // END TEST
+
         return scene;
     };
 
@@ -63,3 +71,23 @@
         engine.resize();
     });
 })();
+
+function cartesianToSphere(latitude, longitude, radius) {
+    longitude = -longitude + 180; // INTENTIONAL: Offset texture to match real coordinates
+    const phi = (90 - latitude) * (Math.PI / 180);
+    const theta = (longitude + 180) * (Math.PI / 180);
+    const x = -((radius) * Math.sin(phi) * Math.cos(theta));
+    const z = ((radius) * Math.sin(phi) * Math.sin(theta));
+    const y = ((radius) * Math.cos(phi));
+    return new BABYLON.Vector3(x, y, z);
+}
+
+function placeMarker(coordarray, earth, scene) {
+    coordarray.forEach(value => {
+        const newsphere = BABYLON.Mesh.CreateSphere('newsphere', 30, 0.1, scene);
+        newsphere.parent = earth;
+        const matrix = new BABYLON.Matrix();
+        earth.getWorldMatrix().invertToRef(matrix);
+        newsphere.position = cartesianToSphere(value.latitude, value.longitude, 10 / 2);
+    });
+}
