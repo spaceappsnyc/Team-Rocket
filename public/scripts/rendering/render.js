@@ -25,6 +25,7 @@
         earthMaterial.diffuseTexture = new BABYLON.Texture('/scripts/rendering/textures/earth/earth_texture.jpg', scene);
         earthMaterial.diffuseTexture.uScale = -1;
         earthMaterial.diffuseTexture.vScale = -1;
+        earthMaterial.wireframe = false;
         earth.material = earthMaterial;
 
         earth.position.y = 1;
@@ -40,8 +41,13 @@
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         skyboxMaterial.disableLighting = true;
         skyboxMaterial.infiniteDistance = true;
-        // skyboxMaterial.turbidity = 100;
         skybox.material = skyboxMaterial;
+
+
+        BABYLON.SceneLoader.ImportMesh('Rocket', '/scripts/rendering/models/Rocket/', 'Rocket.babylon', scene, function(newMeshes) {
+            console.log(newMeshes[0]);
+            newMeshes.map(item => item.position.y = 5);
+        });
 
         return scene;
     };
