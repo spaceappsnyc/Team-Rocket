@@ -38,7 +38,16 @@ h1 {
 .launch-stats {
     top: 70px;
     left: 10px;
-    line-height: 0.75em;
+    line-height: 1em;
+    position: absolute;
+    white-space:pre-wrap;
+    color: white;
+}
+
+.launch-info {
+    top: 150px;
+    left: 10px;
+    line-height: 1.5em;
     position: absolute;
     white-space:pre-wrap;
     color: white;
