@@ -52,7 +52,7 @@
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         skyboxMaterial.disableLighting = true;
         skyboxMaterial.infiniteDistance = true;
-        // skybox.material = skyboxMaterial;
+        skybox.material = skyboxMaterial;
 
         fetch('http://localhost:3000/rockets/next')
             .then(response => {
@@ -61,14 +61,10 @@
                 // Remove any rockets that do not have a launch area set
                 const filtered = response.launches.filter(l => l.location.pads.length > 0);
                 const launchInfo = filtered.map(l => ({ latitude: l.location.pads[0].latitude, longitude: l.location.pads[0].longitude, launchName: l.name, launchDate: l.windowstart }));
-                // const launchInfo = response.launches.map(l => ({ launchName: l.name, launchDate: l.windowstart }));
-                // console.log(launchInfo);
 
-                // Render these rockets on map
                 // Import rocket/marker mesh
                 BABYLON.SceneLoader.ImportMesh('Rocket', '/scripts/rendering/models/Rocket/', 'Rocket.babylon', scene, function(importedMeshes) {
                     const rocketMesh = importedMeshes[0];
-                    // console.log(rocketMesh);
                     placeMarker(launchInfo, earth, scene, rocketMesh);
                 });
             });
@@ -118,7 +114,6 @@ function placeMarker(launchArray, earth, scene, mesh) {
         },
         function() {
             console.log(marker.launchName);
-            // alert(marker.launchName);
             const launchText = `Name: \t ${marker.launchName}\nDate: \t ${marker.launchDate}`;
             document.getElementsByClassName('launch-info')[0].innerHTML = launchText;
         }));
