@@ -113,19 +113,18 @@ function placeMarker(coordarray, earth, scene, mesh) {
     mesh.makeGeometryUnique();
     coordarray.forEach((value, index) => {
         const marker = mesh.createInstance('R' + index);
-        console.log(marker);
         marker.parent = earth;
         const matrix = new BABYLON.Matrix();
         earth.getWorldMatrix().invertToRef(matrix);
         marker.position = cartesianToSphere(value.latitude, value.longitude, 10 / 2);
 
-        const axis1 = BABYLON.Vector3.Cross(earth.position, marker.position);
-        const axis2 = (marker.position).subtract(earth.position);
-        const axis3 = BABYLON.Vector3.Cross(axis1, axis2);
-        marker.position.x += 0.5;
-        marker.position.y += 0.5;
-        marker.position.z += 0.5;
+        const upVector = BABYLON.Vector3.Up();
+        const ray = BABYLON.Ray.CreateNewFromTo(earth.position, marker.position);
+        const axis = BABYLON.Vector3.Cross(upVector, ray.direction);
+        const angle = Math.acos(BABYLON.Vector3.Dot(upVector, ray.direction));
 
-        marker.rotation = BABYLON.Vector3.RotationFromAxis(axis1, axis2, axis3);
+        marker.translate(ray.direction, -2.25);
+
+        marker.rotate(axis, angle);
     });
 }
