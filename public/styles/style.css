@@ -35,6 +35,12 @@ h1 {
     background-color: #EEE;
 }
 
+.launch-stats {
+     position: absolute;
+     white-space:pre-wrap;
+     color: white;
+}
+
 #renderCanvas {
     width: 100%;
     height: 100%;

@@ -1,5 +1,17 @@
 /* global BABYLON */
 (() => {
+    fetch('http://localhost:3000/rockets/stats')
+        .then(response => {
+            return response.json();
+        }).then(response => {
+            const YTDLaunches = response[0].getYtdCount;
+            const NextLaunch = response[1].nextlaunch;
+            const NextCountry = response[1].nextcountry;
+
+            let text = 'Year-to-date Rocket Launches: ' + YTDLaunches;
+            text = text + '\nNext Launch: ' + NextLaunch + ' from ' + NextCountry;
+            document.getElementsByClassName('launch-stats')[0].innerHTML = text;
+        });
     const canvas = document.getElementById('renderCanvas');
     const engine = new BABYLON.Engine(canvas, true);
 
