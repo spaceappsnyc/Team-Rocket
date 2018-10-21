@@ -2,6 +2,8 @@ body {
   padding: 0;
   margin: 0;
   border: 0;
+  height: 100vh;
+  width: 100vw;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -14,7 +16,7 @@ h1 {
 }
 
 .top-navigation {
-    width: 100%;
+    max-width: 100%;
     height: 48px;
     line-height: 48px;
     padding: 5px 10px;
@@ -24,9 +26,16 @@ h1 {
 }
 
 .main-container {
-    padding: 10px;
-    height: calc(100vh  - 48px);
+    /* padding: 10px; */
+    height: calc(100vh  - 61px);
+    width: 100vw;
     background-color: #EEE;
+}
+
+#renderCanvas {
+    width: 100%;
+    height: 100%;
+    touch-action: none;
 }
 
 .card-panel {
