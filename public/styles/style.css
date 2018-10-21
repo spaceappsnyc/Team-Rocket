@@ -17,17 +17,20 @@ h1 {
 
 .top-navigation {
     max-width: 100%;
+    position: absolute;
     height: 48px;
     line-height: 48px;
     padding: 5px 10px;
     font-size: 2.5rem;
     color: #FFFFFF;
-    background-color: #284069;
+    opacity: 1;
+    background-color: rgba(10, 19, 36, 0);
 }
 
 .main-container {
     /* padding: 10px; */
-    height: calc(100vh  - 61px);
+    /* height: calc(100vh  - 61px); */
+    height: 100vh;
     width: 100vw;
     background-color: #EEE;
 }
