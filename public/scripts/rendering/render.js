@@ -6,33 +6,44 @@
     const createScene = function() {
         const scene = new BABYLON.Scene(engine);
 
-        const lightHemi = new BABYLON.HemisphericLight('HemisphericLight', new BABYLON.Vector3(0, 1, 0), scene);
-        const lightOmni = new BABYLON.PointLight('OmniLight', new BABYLON.Vector3(10, 50, 50), scene);
-        lightHemi.diffuse = new BABYLON.Color3(0.1, 0.25, 0.75);
-        lightHemi.specular = new BABYLON.Color3(0.1, 0.25, 0.75);
+        // Light rendering
+        const lightHemi = new BABYLON.HemisphericLight('HemisphericLight', new BABYLON.Vector3(-1, 1, -1), scene);
+        lightHemi.diffuse = new BABYLON.Color3(0.71, 0.71, 0.60);
+        lightHemi.specular = new BABYLON.Color3(0.71, 0.71, 0.60);
         lightHemi.groundColor = new BABYLON.Color3(0.95, 0.95, 1);
-        lightOmni.diffuse = new BABYLON.Color3(1, 1, 0);
-        lightOmni.specular = new BABYLON.Color3(0.25, 0.25, 0);
-        // lightOmni.groundColor = new BABYLON.Color3(1, 1, 0);
 
+        const lightOmni = new BABYLON.PointLight('Omni0', new BABYLON.Vector3(-30, 30, -30), scene);
+        const lightSun = BABYLON.Mesh.CreateSphere('Sphere0', 16, 5.5, scene);
+        lightSun.material = new BABYLON.StandardMaterial('white', scene);
+        lightSun.material.diffuseColor = new BABYLON.Color3(1, 1, 0);
+        lightSun.material.specularColor = new BABYLON.Color3(1, 1, 0);
+        lightSun.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+        lightSun.position = lightOmni.position;
+
+        // Camera rendering
         const camera = new BABYLON.ArcRotateCamera('Camera', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene);
         camera.setPosition(new BABYLON.Vector3(0, 0, 20));
         camera.attachControl(canvas, true);
+        camera.wheelPrecision = 40;
+        camera.lowerRadiusLimit = 13;
+        camera.upperRadiusLimit = 500;
 
+        // Earth rendering
         const earth = BABYLON.MeshBuilder.CreateSphere('earth', { segments: 16, diameter: 10 }, scene);
         const earthMaterial = new BABYLON.StandardMaterial('earthMaterial', scene);
-
         earthMaterial.diffuseTexture = new BABYLON.Texture('/scripts/rendering/textures/earth/earth_texture.jpg', scene);
         earthMaterial.diffuseTexture.uScale = -1;
         earthMaterial.diffuseTexture.vScale = -1;
+        earthMaterial.bumpTexture = new BABYLON.Texture('/scripts/rendering/textures/earth/earth_normal.jpg', scene);
+        earthMaterial.bumpTexture.uScale = -1;
+        earthMaterial.bumpTexture.vScale = -1;
         earthMaterial.wireframe = false;
         earth.material = earthMaterial;
-
-        earth.position.y = 1;
+        earth.position.y = 0;
         earth.position.x = 0;
 
-        // Skybox Material
-        const skybox = BABYLON.Mesh.CreateBox('skyBox', 100.0, scene);
+        // Skybox rendering
+        const skybox = BABYLON.Mesh.CreateBox('skyBox', 1000.0, scene);
         const skyboxMaterial = new BABYLON.StandardMaterial('skyBox', scene);
         skyboxMaterial.backFaceCulling = false;
         skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('/scripts/rendering/textures/space/space_texture', scene);
@@ -43,18 +54,19 @@
         skyboxMaterial.infiniteDistance = true;
         skybox.material = skyboxMaterial;
 
-
-        BABYLON.SceneLoader.ImportMesh('Rocket', '/scripts/rendering/models/Rocket/', 'Rocket.babylon', scene, function(newMeshes) {
-            console.log(newMeshes[0]);
-            newMeshes.map(item => item.position.y = 5);
+        // Import rocket/marker mesh
+        BABYLON.SceneLoader.ImportMesh('Rocket', '/scripts/rendering/models/Rocket/', 'Rocket.babylon', scene, function(importedMeshes) {
+            const rocketMesh = importedMeshes[0];
+            console.log(rocketMesh);
+            placeMarker(coords, earth, scene, rocketMesh);
         });
 
         // TEST: SPHERE SHOULD APPEAR IN MADAGASCAR
         const coords = [
-            { latitude: -18.76, longitude: 46.86 }
+            { latitude: -18.76, longitude: 46.86 },
+            { latitude: 18.76, longitude: 15.86 }
         ];
 
-        placeMarker(coords, earth, scene);
         // END TEST
 
         return scene;
@@ -82,12 +94,24 @@ function cartesianToSphere(latitude, longitude, radius) {
     return new BABYLON.Vector3(x, y, z);
 }
 
-function placeMarker(coordarray, earth, scene) {
-    coordarray.forEach(value => {
-        const newsphere = BABYLON.Mesh.CreateSphere('newsphere', 30, 0.1, scene);
-        newsphere.parent = earth;
+function placeMarker(coordarray, earth, scene, mesh) {
+    console.log('Placing markers...');
+    mesh.makeGeometryUnique();
+    coordarray.forEach((value, index) => {
+        const marker = mesh.createInstance('R' + index);
+        console.log(marker);
+        marker.parent = earth;
         const matrix = new BABYLON.Matrix();
         earth.getWorldMatrix().invertToRef(matrix);
-        newsphere.position = cartesianToSphere(value.latitude, value.longitude, 10 / 2);
+        marker.position = cartesianToSphere(value.latitude, value.longitude, 10 / 2);
+
+        const axis1 = BABYLON.Vector3.Cross(earth.position, marker.position);
+        const axis2 = (marker.position).subtract(earth.position);
+        const axis3 = BABYLON.Vector3.Cross(axis1, axis2);
+        marker.position.x += 0.5;
+        marker.position.y += 0.5;
+        marker.position.z += 0.5;
+
+        marker.rotation = BABYLON.Vector3.RotationFromAxis(axis1, axis2, axis3);
     });
 }
