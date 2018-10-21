@@ -66,20 +66,22 @@
         skyboxMaterial.infiniteDistance = true;
         skybox.material = skyboxMaterial;
 
-        // Import rocket/marker mesh
-        BABYLON.SceneLoader.ImportMesh('Rocket', '/scripts/rendering/models/Rocket/', 'Rocket.babylon', scene, function(importedMeshes) {
-            const rocketMesh = importedMeshes[0];
-            console.log(rocketMesh);
-            placeMarker(coords, earth, scene, rocketMesh);
-        });
+        fetch('http://localhost:3000/rockets/next')
+            .then(response => {
+                return response.json();
+            }).then(response => {
+                // Remove any rockets that do not have a launch area set
+                let filtered = response.launches.filter(l => l.location.pads.length > 0);
+                let coords = filtered.map(l => ({ latitude: l.location.pads[0].latitude, longitude: l.location.pads[0].longitude }));
 
-        // TEST: SPHERE SHOULD APPEAR IN MADAGASCAR
-        const coords = [
-            { latitude: -18.76, longitude: 46.86 },
-            { latitude: 18.76, longitude: 15.86 }
-        ];
-
-        // END TEST
+                // Render these rockets on map
+                // Import rocket/marker mesh
+                BABYLON.SceneLoader.ImportMesh('Rocket', '/scripts/rendering/models/Rocket/', 'Rocket.babylon', scene, function(importedMeshes) {
+                    const rocketMesh = importedMeshes[0];
+                    console.log(rocketMesh);
+                    placeMarker(coords, earth, scene, rocketMesh);
+                });
+            });
 
         return scene;
     };

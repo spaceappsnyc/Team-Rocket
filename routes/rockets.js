@@ -4,7 +4,7 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/next', function(req, res, next) {
-    axios.get('https://launchlibrary.net/1.4/rocket/next/20')
+    axios.get('https://launchlibrary.net/1.4/launch/next/20')
         .then(data => res.json(data.data))
         .catch(console.warn);
 });
