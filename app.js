@@ -22,7 +22,7 @@ app.engine('hbs', hbs({
     layoutsDir: path.join(__dirname, '/views/layouts/'),
     partialsDir: path.join(__dirname, '/views/partials/'),
     helpers: {
-        section: (name, options) => {
+        section: function(name, options) {
             if (!this._sections) {
                 this._sections = {};
             }
