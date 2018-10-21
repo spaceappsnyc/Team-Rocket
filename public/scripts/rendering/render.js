@@ -44,11 +44,11 @@
         skybox.material = skyboxMaterial;
 
         // TEST: SPHERE SHOULD APPEAR IN MADAGASCAR
-        const temp = BABYLON.Mesh.CreateSphere('temp', 30, 0.1, scene);
-        temp.parent = earth;
-        const matrix = new BABYLON.Matrix();
-        earth.getWorldMatrix().invertToRef(matrix);
-        temp.position = cartesianToSphere(-18.76, 46.86, 5);
+        const coords = [
+            { latitude: -18.76, longitude: 46.86 }
+        ];
+
+        placeMarker(coords, earth, scene);
         // END TEST
 
         return scene;
@@ -74,4 +74,14 @@ function cartesianToSphere(latitude, longitude, radius) {
     const z = ((radius) * Math.sin(phi) * Math.sin(theta));
     const y = ((radius) * Math.cos(phi));
     return new BABYLON.Vector3(x, y, z);
+}
+
+function placeMarker(coordarray, earth, scene) {
+    coordarray.forEach(value => {
+        const newsphere = BABYLON.Mesh.CreateSphere('newsphere', 30, 0.1, scene);
+        newsphere.parent = earth;
+        const matrix = new BABYLON.Matrix();
+        earth.getWorldMatrix().invertToRef(matrix);
+        newsphere.position = cartesianToSphere(value.latitude, value.longitude, 10 / 2);
+    });
 }
