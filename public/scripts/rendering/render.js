@@ -8,25 +8,24 @@
 
         const lightHemi = new BABYLON.HemisphericLight('HemisphericLight', new BABYLON.Vector3(0, 1, 0), scene);
         const lightOmni = new BABYLON.PointLight('OmniLight', new BABYLON.Vector3(10, 50, 50), scene);
+        lightHemi.diffuse = new BABYLON.Color3(0, 0.25, 1);
+        lightHemi.specular = new BABYLON.Color3(0, 0.25, 1);
+        lightHemi.groundColor = new BABYLON.Color3(0, 0.25, 1);
+        lightOmni.diffuse = new BABYLON.Color3(1, 1, 0);
+        lightOmni.specular = new BABYLON.Color3(1, 1, 0);
+        lightOmni.groundColor = new BABYLON.Color3(1, 1, 0);
+
         const camera = new BABYLON.ArcRotateCamera('Camera', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene);
-
-        // const camera = new BABYLON.ArcRotateCamera('Camera', 0.4, 1.2, 20, new BABYLON.Vector3(-10, 0, 0), scene);
-
         camera.setPosition(new BABYLON.Vector3(0, 0, 20));
         camera.attachControl(canvas, true);
 
-        // Create a basic light, aiming 0,1,0 - meaning, to the sky.
 
-        // Create a built-in "sphere" shape.
-        const sphere = BABYLON.MeshBuilder.CreateSphere('sphere', { segments: 16, diameter: 2 }, scene);
+        const earth = BABYLON.MeshBuilder.CreateSphere('earth', { segments: 16, diameter: 10 }, scene);
 
-        // Move the sphere upward 1/2 of its height.
-        sphere.position.y = 1;
-        sphere.position.x = 0;
+        earth.position.y = 1;
+        earth.position.x = 0;
 
-        // const ground = BABYLON.MeshBuilder.CreateGround('ground1', { height: 6, width: 6, subdivisions: 2 }, scene);
-
-        // Skybox
+        // Skybox Material
         const skybox = BABYLON.Mesh.CreateBox('skyBox', 100.0, scene);
         const skyboxMaterial = new BABYLON.StandardMaterial('skyBox', scene);
         skyboxMaterial.backFaceCulling = false;
@@ -35,14 +34,12 @@
         skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         skyboxMaterial.disableLighting = true;
-        // skyboxMaterial.infiniteDistance = true;
+        skyboxMaterial.infiniteDistance = true;
+        // skyboxMaterial.turbidity = 100;
         skybox.material = skyboxMaterial;
 
-        // const skyMaterial = new BABYLON.SkyMaterial('skyMaterial', scene);
-        // skyMaterial.backFaceCulling = false;
-        //
-        // const skybox = BABYLON.Mesh.CreateBox('skyBox', 1000.0, scene);
-        // skybox.material = skyMaterial;
+        const earthMaterial = new BABYLON.StandardMaterial('earthMaterial', scene);
+        earth.material = earthMaterial;
 
         return scene;
     };
