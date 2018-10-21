@@ -20,6 +20,11 @@
         // Create a built-in "sphere" shape.
         const sphere = BABYLON.MeshBuilder.CreateSphere('sphere', { segments: 16, diameter: 2 }, scene);
 
+        const earthMaterial = new BABYLON.StandardMaterial('earthMaterial', scene);
+
+        earthMaterial.diffuseTexture = new BABYLON.Texture('/scripts/rendering/textures/earth/earth_texture.jpg', scene);
+        sphere.material = earthMaterial;
+
         // Move the sphere upward 1/2 of its height.
         sphere.position.y = 1;
         sphere.position.x = 0;
